@@ -5,11 +5,35 @@
     <title>Chat Room</title>
 </head>
 <body>
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
-    <input id="chat-message-input" type="text" size="100"><br>
-    <input id="chat-message-submit" type="button" value="Send">
+    <div class="container">
+        <div class="background">
+            <div class="chatbot-container">
+                <div class="header"></div>
+
+                <div id="chattingPanel">
+
+                </div>
+                <div class = input-text-border>
+                    <input id="chat-message-input" type="text" size="100" placeholder = "궁금한 것을 물어보세요."><br>
+                    <input id="chat-message-submit" type="button" value="Send">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     {{ room_name|json_script:"room-name" }}
     <script>
+    function type_test(text)
+    {
+      var bool = false;
+      if (text == 'question')
+      {
+        bool = true;
+      }
+      return bool;
+    }
+
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
 
         const chatSocket = new WebSocket(
@@ -22,7 +46,23 @@
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += (data.message + '\n');
+
+            test = type_test(data.type)
+
+            if (test == true)
+            {
+              var $div = document.createElement('div');
+              $div.setAttribute('class', 'chat-message-right')
+              $div.innerHTML = data.message;
+              document.getElementById("chattingPanel").appendChild($div);
+            }
+            else
+            {
+              var $div = document.createElement('div');
+              $div.setAttribute('class', 'chat-message-left')
+              $div.innerHTML = data.chatbot_message;
+              document.getElementById("chattingPanel").appendChild($div);
+            }
         };
 
         chatSocket.onclose = function(e) {

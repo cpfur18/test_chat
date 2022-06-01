@@ -13,6 +13,49 @@ class ChatbotMessageSender:
     # 챗봇 secret key
     secret_key = 'd29WQ0VnR3J1bEhvempvRGVKVkVWSWRDSkVOUmhPTVc='
 
+    # 웰컴 메시지
+    def req_message_open(self):
+        # html post형식으로 데이터 받아오기
+        timestamp = self.get_timestamp()
+        request_body = {
+            'version': 'v2',
+            'userId': 'U47b00b58c90f8e47428af8b7bddcda3d1111111',
+            'timestamp': timestamp,
+            'bubbles': [
+                {
+                    'type': 'text',
+                    'data': {
+                        'description': ''
+                    }
+                }
+            ],
+            'event': 'open'
+        }
+
+        ## Request body(클로바 챗봇에 맞게 인코딩)
+        encode_request_body = json.dumps(request_body).encode('UTF-8')
+
+        ## make signature
+        signature = self.make_signature(self.secret_key, encode_request_body)
+
+        ## headers
+        custom_headers = {
+            'Content-Type': 'application/json;UTF-8',
+            'X-NCP-CHATBOT_SIGNATURE': signature
+        }
+
+        """
+        print("## Timestamp : ", timestamp)
+        print("## Signature : ", signature)
+        print("## headers ", custom_headers)
+        print("## Request Body : ", encode_request_body)
+        """
+
+        ## POST Request(POST 요청, data에 있는 정보를 POST로 전송)
+        response = requests.post(headers=custom_headers, url=self.ep_path, data=encode_request_body)
+
+        return response
+
     # 사용자 메시지 전송
     def req_message_send(self, question):
         # html post형식으로 데이터 받아오기
@@ -73,20 +116,29 @@ class ChatbotMessageSender:
 #     result = json_data['bubbles'][0]['data']['description']
 #     return result
 
-def json_parsing(qwe):
-    json_data = json.loads(qwe.text)
+
+# class json_parsion:
+#     def type_text(self, question):
+#         json_data = json.loads(question.text)
+#         if json_data['type'] == 'text' and :
+#             sdsd
+
+def json_parsing(question):
+    json_data = json.loads(question.text)
+    result = json_data['bubbles']
     # result = json_data['bubbles'][0]['data']['description']
-    #질문 답변 타입
+    # 질문 답변 타입
     # json_data['bubbles'][0]['type']
     # print(json_data['bubbles'][0]['type'])
-    return json_data
+    return result
 
-if __name__ == '__main__':
 
-    res = ChatbotMessageSender().req_message_send('빨래하고 싶어')
+# if __name__ == '__main__':
+
+    # res = ChatbotMessageSender().req_message_send('빨래하고 싶어')
     # a = json_parsing(res)
-    a = json_parsing(res)
-    print(res.text)
+    # a = json_parsing(res)
+    # print(res.text)
     # if (res.status_code == 200):
     #     pprint.pprint(res.text)
         # print(res.read().decode("UTF-8"))
