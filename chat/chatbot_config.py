@@ -5,13 +5,14 @@ import time
 import requests
 import json
 import pprint
+import chat.chatbot_seckey as chatbot_seckey
 
 
 class ChatbotMessageSender:
     # 챗봇 `api 게이트웨이 url
-    ep_path = 'https://jyiq09glzg.apigw.ntruss.com/custom/v1/6976/3d3d2b9a198af4364d5947f54d8777186f35511e9a6110e6b1759696b14a9891'
+    ep_path = chatbot_seckey.ep_path
     # 챗봇 secret key
-    secret_key = 'd29WQ0VnR3J1bEhvempvRGVKVkVWSWRDSkVOUmhPTVc='
+    secret_key = chatbot_seckey.secret_key
 
     # 사용자 메시지 전송
     def req_message_send(self, question):

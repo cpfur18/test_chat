@@ -1,0 +1,4 @@
+mysite/__pycache__/*
+chat/__pycache__/*
+chat/migrations/__pycache__/*
+chatbot_seckey.py
