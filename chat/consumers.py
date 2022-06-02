@@ -24,22 +24,20 @@ class ChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         # print(text_data_json)
         message = text_data_json['message']
-        print(message)
+        
+        chatbot = chatbot_config.ChatbotMessageSender()
+        res = chatbot.req_message_send(message)
+        
+        chat_message = chatbot_config.json_parsing(res)
+        print(chat_message)
+        
         self.send(text_data=json.dumps({
-            'type': 'question',
             'message': message,
         }))
 
-        # 질문 후 대기
-        sleep(0.5)
 
-        res = chatbot_config.ChatbotMessageSender().req_message_send(message)
-        chat_message = chatbot_config.json_parsing(res)
+        
 
-        print(chat_message)
-        self.send(text_data=json.dumps({
-            'type': 'answer',
-            'chatbot_message': chat_message
-        }))
+
 
 
