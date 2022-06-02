@@ -32,7 +32,7 @@ class ChatConsumer(WebsocketConsumer):
         print(chat_message)
         
         self.send(text_data=json.dumps({
-            'message': message,
+            'message': chat_message,
         }))
 
 

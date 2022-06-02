@@ -125,8 +125,8 @@ class ChatbotMessageSender:
 
 def json_parsing(question):
     json_data = json.loads(question.text)
-    result = json_data['bubbles']
-    # result = json_data['bubbles'][0]['data']['description']
+    # result = json_data['bubbles']
+    result = json_data['bubbles'][0]['data']['description']
     # 질문 답변 타입
     # json_data['bubbles'][0]['type']
     # print(json_data['bubbles'][0]['type'])
