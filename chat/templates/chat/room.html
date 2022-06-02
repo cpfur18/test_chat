@@ -15,7 +15,7 @@
                 </div>
                 <div class = input-text-border>
                     <input id="chat-message-input" type="text" size="100" placeholder = "궁금한 것을 물어보세요."><br>
-                    <input id="chat-message-submit" type="button" value="Send">
+                    <input id="chat-message-submit" type="button" value="보내기">
                 </div>
             </div>
         </div>
@@ -24,18 +24,14 @@
 
     {{ room_name|json_script:"room-name" }}
     <script>
-    function type_test(text)
-    {
-      var bool = false;
-      if (text == 'question')
-      {
-        bool = true;
-      }
-      return bool;
-    }
-
+        // 사용자  메시지 출력
+        function message
+        {
+            
+        }
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
-
+        
+        // 웹 소켓 연결
         const chatSocket = new WebSocket(
             'ws://'
             + window.location.host
@@ -43,7 +39,15 @@
             + roomName
             + '/'
         );
-
+        
+        //웹 소켓 연결 시 이벤트(Welcome message)
+        chatSocket.onopen = function(e) {
+            chatSocket.send(JSON.stringify({
+                'description': postback text of welcome action
+            }));
+        }
+            
+        // 웹 소켓에서 신호 받을 시 이벤트
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
 
@@ -59,14 +63,18 @@
             else
             {
               var $div = document.createElement('div');
-              $div.setAttribute('class', 'chat-message-left')
+              $div.setAttribute('class', 'chat-message-left');
               $div.innerHTML = data.chatbot_message;
               document.getElementById("chattingPanel").appendChild($div);
             }
         };
-
+        
+        // 웹 소켓 연결 해제 시 이벤트
         chatSocket.onclose = function(e) {
-            console.error('Chat socket closed unexpectedly');
+            var $div = document.createElement('div');
+            $div.setAttribute('class', 'chat-message-left');
+            $div.innerHTML = "연결이 중단 되었습니다.;
+            document.getElementById("chattingPanel").appendChild($div);
         };
 
         document.querySelector('#chat-message-input').focus();
@@ -75,7 +83,8 @@
                 document.querySelector('#chat-message-submit').click();
             }
         };
-
+        
+        // 메시지 보내기 버튼 클릭 또는 엔터 키 입력 시 JSON 파일 서버로 Send
         document.querySelector('#chat-message-submit').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
             const message = messageInputDom.value;
