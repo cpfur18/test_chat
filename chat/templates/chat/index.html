@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <title>Chat Rooms</title>
-</head>
-<body>
-    What chat room would you like to enter?<br>
-    <input id="room-name-input" type="text" size="100"><br>
-    <input id="room-name-submit" type="button" value="Enter">
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+    챗봇에 연결하려면 버튼을 누르세요.<br>
+    <input id="room-name-input" type="hidden" value="chatbot" size="100"><br>
+    <input id="room-name-submit" type="button" value="챗봇 연결">
 
     <script>
         document.querySelector('#room-name-input').focus();
@@ -19,8 +15,7 @@
 
         document.querySelector('#room-name-submit').onclick = function(e) {
             var roomName = document.querySelector('#room-name-input').value;
-            window.location.pathname = '/chat/' + roomName + '/';
+            window.location.pathname = roomName + '/';
         };
     </script>
-</body>
-</html>
+{% endblock %}

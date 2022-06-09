@@ -9,12 +9,12 @@ import pprint
 
 class ChatbotMessageSender:
     # 챗봇 `api 게이트웨이 url
-    ep_path = 'https://jyiq09glzg.apigw.ntruss.com/custom/v1/6976/3d3d2b9a198af4364d5947f54d8777186f35511e9a6110e6b1759696b14a9891'
+    ep_path = 'https://9kacj920ed.apigw.ntruss.com/custom/v1/7036/2e26ad07493b674c401b4d331820df08b05b6f8d6eb935c6463bb3e9bfdcfeda'
     # 챗봇 secret key
-    secret_key = 'd29WQ0VnR3J1bEhvempvRGVKVkVWSWRDSkVOUmhPTVc='
+    secret_key = 'cUJmb1VpVWJ0RFBQTnBud1BDblZwaGlCb1J2b3dPTEs='
 
     # 웰컴 메시지
-    def req_message_open(self):
+    def req_message_open(self, question):
         # html post형식으로 데이터 받아오기
         timestamp = self.get_timestamp()
         request_body = {
@@ -25,7 +25,7 @@ class ChatbotMessageSender:
                 {
                     'type': 'text',
                     'data': {
-                        'description': ''
+                        'description': question
                     }
                 }
             ],
@@ -111,34 +111,40 @@ class ChatbotMessageSender:
         signing_key = base64.b64encode(hmac.new(secret_key_bytes, request_body, digestmod=hashlib.sha256).digest())
 
         return signing_key
-# def json_parsing(qwe):
-#     json_data = json.loads(qwe.text)
-#     result = json_data['bubbles'][0]['data']['description']
-#     return result
+
+# def json_parsing2(question):
+#     json_data = json.loads(question.text)
+#     print(json_data)
+#     count_contentTable = len(json_data['bubbles'][0]['data']['contentTable'])
+#     print(json_data['bubbles'][0]['data']['contentTable'][0][0])
+#     for i in range(count_contentTable):
+#         print(i)
+#         title = json_data['bubbles'][0]['data']['contentTable'][0]['data']['title']
+#         displayText = json_data['bubbles'][0]['data']['contentTable'][i]['data'].get('displayText')
+#         postbackFull = json_data['bubbles'][0]['data']['contentTable'][i]['data'].get('postbackFull')
+#
+#         locals()['contentTable' + str(i)] = json.dumps({
+#                 'title': title,
+#                 'displayText': displayText,
+#                 'postbackFull': postbackFull,
+#         })
+#         print(contentTable[i])
+
+# def template_image_send(self, res):
+#     json_data = json.loads(res.text)
+#     title = json_data['bubbles'][0]['data'].get('title')
+#     count_contentTable = len(json_data['bubbles'][0]['data']['contentTable'][0][0])
+#     subTitle = json_data['bubbles'][0]['data']['subTitle']
+#     description = json_data['bubbles'][0]['data']['data']['description']
+#     url = json_data['bubbles'][0]['data']['data']['url']
+#     urlAlias = json_data['bubbles'][0]['data']['data']['urlAlias']
 
 
-# class json_parsion:
-#     def type_text(self, question):
-#         json_data = json.loads(question.text)
-#         if json_data['type'] == 'text' and :
-#             sdsd
-
-def json_parsing(question):
-    json_data = json.loads(question.text)
-    # result = json_data['bubbles']
-    result = json_data['bubbles'][0]['data']['description']
-    # 질문 답변 타입
-    # json_data['bubbles'][0]['type']
-    # print(json_data['bubbles'][0]['type'])
-    return result
+if __name__ == '__main__':
+    res = ChatbotMessageSender().req_message_send('동서대 편의시설')
+    json_data = json.loads(res.text)
+    response = json_data['bubbles'][0]
+    print(response)
 
 
-# if __name__ == '__main__':
 
-    # res = ChatbotMessageSender().req_message_send('빨래하고 싶어')
-    # a = json_parsing(res)
-    # a = json_parsing(res)
-    # print(res.text)
-    # if (res.status_code == 200):
-    #     pprint.pprint(res.text)
-        # print(res.read().decode("UTF-8"))

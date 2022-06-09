@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <title>Chat Room</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
     <div class="container">
-        <div class="background">
+        <div class="background" style="--color-sub:#ffffff; --color-button-text:#0084ff; --color-button-border:#c3c3c3; --color-button-bg:#ffffff; --color-balloon-chatbot-bg:#eef1f4; --color-balloon-chatbot-text:#3d3d3d; --color-balloon-user-bg:#555a9c; --color-balloon-user-text:#ffffff; --color-date-text:#9b9b9b; --color-highlight:#ddefff; --color-bg:#7f8198; height: 762px;">
             <div class="chatbot-container">
                 <div class="header"></div>
 
@@ -43,13 +39,67 @@
         }
 
         // 웹 소켓에서 신호 받을 시 이벤트
-        chatSocket.onmessage = function(e) {
+        chatSocket.onmessage = function(e)
+        {
             const data = JSON.parse(e.data);
+            var $img = document.createElement('img');
+            var $a = document.createElement('a');
 
-            var $div = document.createElement('div');
-            $div.setAttribute('class', 'chat-message-left');
-            $div.innerHTML = data.message;
-            document.getElementById("chattingPanel").appendChild($div);
+            if (data.case == "full_text")
+            {
+                var $div = document.createElement('div');
+                $div.setAttribute('class', 'chat-message-left');
+                $div.innerHTML = data.description + "<br>" + "<a>" + data.url + "</a>";
+                document.getElementById("chattingPanel").append($div);
+            }
+
+            if (data.case == "text")
+            {
+                var $div = document.createElement('div');
+                $div.setAttribute('class', 'chat-message-left');
+                $div.innerHTML = data.description + "<br>";
+                document.getElementById("chattingPanel").append($div);
+            }
+
+            if (data.case == "text_template")
+            {
+                var count = data.count;
+                var result = JSON.stringify(data)
+                var $div = document.createElement('div');
+
+                $div.setAttribute('class', 'chat-message-left');
+                $div.innerHTML = result + "<br>";
+                document.getElementById("chattingPanel").append($div);
+
+            }
+
+            if (data.case == "image_template")
+            {
+
+                var count = data.count;
+                var title = data.bubbles[0].data.cover.title
+                var imageUrl = data.bubbles[0].data.cover.data.imageUrl
+
+                var count = data.count;
+                var $div = document.createElement('div');
+                $div.setAttribute('class', 'chat-message-left');
+                $div.innerHTML = title + "<br>";
+                document.getElementById("chattingPanel").append($div);
+
+                var i = 0;
+                while (i < count)
+                {
+                    var title = data.bubbles[i].data.contentTable[i].title;
+
+                    $div.innerHTML = "<button>" + title + "</button>" + "<br>";
+                    document.getElementById("chattingPanel").append($div);
+                };
+
+            }
+
+
+            var elem = document.getElementById('chattingPanel');
+            elem.scrollTop = elem.scrollHeight;
         };
 
         // 웹 소켓 연결 해제 시 이벤트
@@ -76,7 +126,7 @@
             // 사용자 입력 메시지 출력
             var $div = document.createElement('div');
             $div.setAttribute('class', 'chat-message-right')
-            $div.innerHTML = message;
+            $div.innerText = message + "\n";
             document.getElementById("chattingPanel").appendChild($div);
 
             // 웹소캣에 메시지 전송
@@ -86,5 +136,4 @@
             messageInputDom.value = '';
         };
     </script>
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% load static %}
+<!doctype html>
+<html lang="ko">
+<head>
+    <title>Notebook World</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+</head>
+<body>
+<div class="header">
+    <a href="#">
+        <img src="{%static 'img/logo.png' %}" alt="로고">
+    </a>
+    <div><hr></div>
+</div>
+{% block content %}
+{% endblock %}
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+</body>
+
+</html>
